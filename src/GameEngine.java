@@ -1,7 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
-public class Game extends Thread {
+public class GameEngine extends Thread {
     private int delay = 20;
     private long pretime;
     private int cnt;
@@ -14,7 +15,10 @@ public class Game extends Thread {
     private int playerSpeed = 10;   //플레이 이동거리
     private int playerHp = 30;
 
-    private boolean up, down, left, right;  //움직임
+    private boolean up, down, left, right, shooting;  //움직임
+
+    ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
+    private PlayerAttack playerAttack;
 
     @Override
     public void run(){
@@ -28,6 +32,7 @@ public class Game extends Thread {
                 try {
                     Thread.sleep(delay - System.currentTimeMillis() + pretime);
                     keyProcess();
+                    playerAttackProcess();
                     cnt++;
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -42,6 +47,18 @@ public class Game extends Thread {
         if(down && playerY + playerHeight + playerSpeed < Main.SCREEN_HEIGHT) playerY += playerSpeed;
         if(left && playerX - playerSpeed > 0) playerX -= playerSpeed;
         if(right && playerX + playerWidth + playerSpeed < Main.SCREEN_WIDTH) playerX += playerSpeed;
+        if(shooting && cnt % 15 == 0){
+            playerAttack = new PlayerAttack(playerX + 222, playerY+25);
+            playerAttackList.add(playerAttack);
+        }
+    }
+
+    //공격처리
+    private void playerAttackProcess(){
+        for (int i = 0; i < playerAttackList.size(); i++){
+            playerAttack = playerAttackList.get(i);
+            playerAttack.fire();
+        }
     }
 
     public void gameDraw(Graphics g){   //게임요소 그리기
@@ -50,6 +67,10 @@ public class Game extends Thread {
 
     public void playerDraw(Graphics g){
         g.drawImage(player,playerX,playerY,null);
+        for (int i = 0; i < playerAttackList.size(); i++){
+            playerAttack = playerAttackList.get(i);
+            g.drawImage(playerAttack.image, playerAttack.x, playerAttack.y, null);
+        }
     }
 
     public void setUp(boolean up) {
@@ -66,5 +87,9 @@ public class Game extends Thread {
 
     public void setRight(boolean right) {
         this.right = right;
+    }
+
+    public void setShooting(boolean shooting) {
+        this.shooting = shooting;
     }
 }

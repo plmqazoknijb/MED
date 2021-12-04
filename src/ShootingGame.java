@@ -16,7 +16,7 @@ public class ShootingGame extends JFrame {
 
     private boolean isMainScreen, isLoadingScreen, isGameScreen;
 
-    public static Game game = new Game();
+    public static GameEngine game = new GameEngine();
 
     public ShootingGame(){
         setTitle("슈팅게임");
@@ -82,17 +82,20 @@ public class ShootingGame extends JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()){
-                case KeyEvent.VK_W:     //S키를 누르면 아래로
+                case KeyEvent.VK_W:     //W키를 누르면 아래로
                     game.setUp(true);
                     break;
                 case KeyEvent.VK_S:     //S키를 누르면 아래로
                     game.setDown(true);
                     break;
-                case KeyEvent.VK_A:     //D키를 누르면 오른쪽
+                case KeyEvent.VK_A:     //A키를 누르면 오른쪽
                     game.setLeft(true);
                     break;
                 case KeyEvent.VK_D:     //D키를 누르면 오른쪽
                     game.setRight(true);
+                    break;
+                case KeyEvent.VK_SPACE:     //Space키를 누르면 주먹이 나감
+                    game.setShooting(true);
                     break;
                 case KeyEvent.VK_ENTER:     //Enter누르면 게임방법화면으로
                     if (isMainScreen) gameStart();
@@ -116,6 +119,9 @@ public class ShootingGame extends JFrame {
                     break;
                 case KeyEvent.VK_D:
                     game.setRight(false);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    game.setShooting(false);
                     break;
             }
         }
