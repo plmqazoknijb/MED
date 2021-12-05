@@ -56,11 +56,11 @@ public class ShootingGame extends JFrame {
             public void run() {
                 isLoadingScreen = false;
                 isGameScreen = true;
+                game.start();
             }
         };
         loadingTimer.schedule(loadingTask,3000);    //로딩화면 --3초--> 게임화면
 
-        game.start();
     }
 
     public void screenDraw(Graphics g){ //필요한 요소 그려줌
