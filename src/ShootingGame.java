@@ -16,7 +16,7 @@ public class ShootingGame extends JFrame {
 
     private boolean isMainScreen, isLoadingScreen, isGameScreen;
 
-    public static GameEngine game = new GameEngine();
+    private GameEngine game = new GameEngine();
 
     public ShootingGame(){
         setTitle("슈팅게임");
@@ -93,6 +93,9 @@ public class ShootingGame extends JFrame {
                     break;
                 case KeyEvent.VK_D:     //D키를 누르면 오른쪽
                     game.setRight(true);
+                    break;
+                case KeyEvent.VK_R:
+                    if(game.isOver()) game.reset();     //R키를 누르면 게임 다시 시작
                     break;
                 case KeyEvent.VK_SPACE:     //Space키를 누르면 주먹이 나감
                     game.setShooting(true);

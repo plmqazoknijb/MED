@@ -6,6 +6,7 @@ public class GameEngine extends Thread {
     private int delay = 20;
     private long pretime;
     private int cnt;
+    private int score;
 
     private Image player = new ImageIcon("src/images/player.png").getImage();
 
@@ -16,6 +17,7 @@ public class GameEngine extends Thread {
     private int playerHp = 30;
 
     private boolean up, down, left, right, shooting;  //움직임
+    private boolean isOver;
 
     private ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
     private ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
@@ -28,26 +30,43 @@ public class GameEngine extends Thread {
 
     @Override
     public void run(){
+
+        reset();
+        while (true) {
+            while (!isOver) {
+                pretime = System.currentTimeMillis();
+                if (System.currentTimeMillis() - pretime < delay) {   //현재시간 - cnt증가 전 시간
+                    try {
+                        Thread.sleep(delay - System.currentTimeMillis() + pretime);
+                        keyProcess();
+                        playerAttackProcess();
+                        enemyAppearProcess();
+                        enemyMoveProcess();
+                        enemyAttackProcess();
+                        cnt++;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            try{
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void reset(){
+        isOver = false;
         cnt = 0;
+        score = 0;
         playerX = 10;
         playerY = (Main.SCREEN_HEIGHT - playerHeight) / 2;
 
-        while (true){
-            pretime = System.currentTimeMillis();
-            if(System.currentTimeMillis() - pretime < delay){   //현재시간 - cnt증가 전 시간
-                try {
-                    Thread.sleep(delay - System.currentTimeMillis() + pretime);
-                    keyProcess();
-                    playerAttackProcess();
-                    enemyAppearProcess();
-                    enemyMoveProcess();
-                    enemyAttackProcess();
-                    cnt++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        playerAttackList.clear();
+        enemyList.clear();
+        enemyAttackList.clear();
     }
 
     //키 입력 메소드
@@ -76,6 +95,7 @@ public class GameEngine extends Thread {
                 }
                 if(enemy.hp <= 0){
                     enemyList.remove(enemy);
+                    score += 1000;
                 }
             }
         }
@@ -109,6 +129,7 @@ public class GameEngine extends Thread {
             if(enemyAttack.x > playerX & enemyAttack.x < playerWidth && enemyAttack.y > playerY && enemyAttack.y < playerY + playerHeight){
                 playerHp -= enemyAttack.attack;
                 enemyAttackList.remove(enemyAttack);
+                if(playerHp <= 0) isOver = true;
             }
         }
     }
@@ -116,6 +137,20 @@ public class GameEngine extends Thread {
     public void gameDraw(Graphics g){   //게임요소 그리기
         playerDraw(g);
         enemyDraw(g);
+        infoDraw(g);
+    }
+
+    public void infoDraw(Graphics g){
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial",Font.BOLD, 40));
+        g.drawString("SCORE : "+score, 40,80);
+        if(isOver){
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial",Font.BOLD,80));
+            g.drawString("GAME OVER",350,380);
+            g.setFont(new Font("Arial",Font.CENTER_BASELINE,50));
+            g.drawString("Press R to restart",390,450);
+        }
     }
 
     public void playerDraw(Graphics g){
@@ -139,6 +174,10 @@ public class GameEngine extends Thread {
             enemyAttack = enemyAttackList.get(i);
             g.drawImage(enemyAttack.image, enemyAttack.x,enemyAttack.y,null);
         }
+    }
+
+    public boolean isOver() {
+        return isOver;
     }
 
     public void setUp(boolean up) {
