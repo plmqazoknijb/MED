@@ -10,16 +10,16 @@ public class ShootingGame extends JFrame {
     public Image bufferImage;
     private Graphics screenGraphic;
 
-    private Image mainScreen = new ImageIcon("src/images/main_screen.png").getImage();  //Main화면
-    private Image loadingScreen = new ImageIcon("src/images/loading_screen.png").getImage();    //loading화면
-    private Image gameScreen = new ImageIcon("src/images/game_screen.png").getImage();  //game화면
+    private Image main = new ImageIcon("src/images/main.png").getImage();  //Main화면
+    private Image loading = new ImageIcon("src/images/loading.png").getImage();    //loading화면
+    private Image play = new ImageIcon("src/images/play.jpg").getImage();  //game화면
 
-    private boolean isMainScreen, isLoadingScreen, isGameScreen;
+    private boolean isMain, isLoading, isPlay;
 
     private GameEngine game = new GameEngine();
 
     public ShootingGame(){
-        setTitle("슈팅게임");
+        setTitle("SLS");
         setUndecorated(true);   //GUI 테투리 없게
         setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         setResizable(false);
@@ -32,9 +32,9 @@ public class ShootingGame extends JFrame {
     }
 
     private void init(){    //초기화
-        isMainScreen = true;
-        isLoadingScreen = false;
-        isGameScreen = false;
+        isMain = true;
+        isLoading = false;
+        isPlay = false;
 
         addKeyListener(new KeyListener());
     }
@@ -47,15 +47,15 @@ public class ShootingGame extends JFrame {
     }
 
     private void gameStart(){
-        isMainScreen = false;
-        isLoadingScreen = true;
+        isMain = false;
+        isLoading = true;
 
         Timer loadingTimer = new Timer();
         TimerTask loadingTask = new TimerTask() {
             @Override
             public void run() {
-                isLoadingScreen = false;
-                isGameScreen = true;
+                isLoading = false;
+                isPlay = true;
                 game.start();
             }
         };
@@ -63,17 +63,19 @@ public class ShootingGame extends JFrame {
 
     }
 
+
     public void screenDraw(Graphics g){ //필요한 요소 그려줌
-        if(isMainScreen){
-            g.drawImage(mainScreen,0,0,null);
+        if(isMain){
+            g.drawImage(main,0,0,null);
         }
-        if(isLoadingScreen){
-            g.drawImage(loadingScreen,0,0,null);
+        if(isLoading){
+            g.drawImage(loading,0,0,null);
         }
-        if(isGameScreen){
-            g.drawImage(gameScreen,0,0,null);
+        if(isPlay){
+            g.drawImage(play,0,0,null);
             game.gameDraw(g);
         }
+
         this.repaint();
     }
 
@@ -82,17 +84,11 @@ public class ShootingGame extends JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             switch (e.getKeyCode()){
-                case KeyEvent.VK_W:     //W키를 누르면 아래로
+                case KeyEvent.VK_UP:     //W키를 누르면 위로
                     game.setUp(true);
                     break;
-                case KeyEvent.VK_S:     //S키를 누르면 아래로
+                case KeyEvent.VK_DOWN:     //S키를 누르면 아래로
                     game.setDown(true);
-                    break;
-                case KeyEvent.VK_A:     //A키를 누르면 오른쪽
-                    game.setLeft(true);
-                    break;
-                case KeyEvent.VK_D:     //D키를 누르면 오른쪽
-                    game.setRight(true);
                     break;
                 case KeyEvent.VK_R:
                     if(game.isOver()) game.reset();     //R키를 누르면 게임 다시 시작
@@ -101,7 +97,7 @@ public class ShootingGame extends JFrame {
                     game.setShooting(true);
                     break;
                 case KeyEvent.VK_ENTER:     //Enter누르면 게임방법화면으로
-                    if (isMainScreen) gameStart();
+                    if (isMain) gameStart();
                     break;
                 case KeyEvent.VK_ESCAPE:     //Esc누르면 종료
                     System.exit(0);
@@ -111,17 +107,11 @@ public class ShootingGame extends JFrame {
 
         public void keyReleased(KeyEvent e) {
             switch (e.getKeyCode()){
-                case KeyEvent.VK_W:
+                case KeyEvent.VK_UP:
                     game.setUp(false);
                     break;
-                case KeyEvent.VK_S:
+                case KeyEvent.VK_DOWN:
                     game.setDown(false);
-                    break;
-                case KeyEvent.VK_A:
-                    game.setLeft(false);
-                    break;
-                case KeyEvent.VK_D:
-                    game.setRight(false);
                     break;
                 case KeyEvent.VK_SPACE:
                     game.setShooting(false);

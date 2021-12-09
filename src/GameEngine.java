@@ -16,7 +16,7 @@ public class GameEngine extends Thread {
     private int playerSpeed = 10;   //플레이 이동거리
     private int playerHp = 30;
 
-    private boolean up, down, left, right, shooting;  //움직임
+    private boolean up, down, shooting;  //움직임
     private boolean isOver;
 
     private ArrayList<PlayerAttack> playerAttackList = new ArrayList<PlayerAttack>();
@@ -73,8 +73,6 @@ public class GameEngine extends Thread {
     private void keyProcess(){
         if(up && playerY - playerSpeed > 0) playerY -= playerSpeed;
         if(down && playerY + playerHeight + playerSpeed < Main.SCREEN_HEIGHT) playerY += playerSpeed;
-        if(left && playerX - playerSpeed > 0) playerX -= playerSpeed;
-        if(right && playerX + playerWidth + playerSpeed < Main.SCREEN_WIDTH) playerX += playerSpeed;
         if(shooting && cnt % 15 == 0){
             playerAttack = new PlayerAttack(playerX + 222, playerY+25);
             playerAttackList.add(playerAttack);
@@ -93,7 +91,7 @@ public class GameEngine extends Thread {
                     enemy.hp -= playerAttack.attack;
                     playerAttackList.remove(playerAttack);
                 }
-                if(enemy.hp <= 0){
+                if(enemy.hp <= 0){  //적 죽음
                     enemyList.remove(enemy);
                     score += 1000;
                 }
@@ -144,10 +142,13 @@ public class GameEngine extends Thread {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial",Font.BOLD, 40));
         g.drawString("SCORE : "+score, 40,80);
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial",Font.TYPE1_FONT, 30));
+        g.drawString("press ESC to game over ", 880,60);
         if(isOver){
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial",Font.BOLD,80));
-            g.drawString("GAME OVER",350,380);
+            g.drawString("GAME OVER",350,400);
             g.setFont(new Font("Arial",Font.CENTER_BASELINE,50));
             g.drawString("Press R to restart",390,450);
         }
@@ -186,14 +187,6 @@ public class GameEngine extends Thread {
 
     public void setDown(boolean down) {
         this.down = down;
-    }
-
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-
-    public void setRight(boolean right) {
-        this.right = right;
     }
 
     public void setShooting(boolean shooting) {
