@@ -19,7 +19,7 @@ public class ShootingGame extends JFrame {
     private GameEngine game = new GameEngine();
 
     public ShootingGame(){
-        setTitle("SLS");
+        setTitle("M.E.D");
         setUndecorated(true);   //GUI 테투리 없게
         setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
         setResizable(false);

@@ -63,6 +63,7 @@ public class GameEngine extends Thread {
         score = 0;
         playerX = 10;
         playerY = (Main.SCREEN_HEIGHT - playerHeight) / 2;
+        playerHp = 30;
 
         playerAttackList.clear();
         enemyList.clear();
