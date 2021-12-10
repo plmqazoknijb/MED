@@ -94,7 +94,7 @@ public class GameEngine extends Thread {
                 }
                 if(enemy.hp <= 0){  //적 죽음
                     enemyList.remove(enemy);
-                    score += 1000;
+                    score += 100;
                 }
             }
         }
